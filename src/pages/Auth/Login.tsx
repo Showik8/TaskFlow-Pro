@@ -1,10 +1,12 @@
-// src/pages/auth/Login.tsx
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout";
 import Input from "../../components/ui/Input";
 import { CheckSquare } from "lucide-react";
 import { loginSchema, type LoginSchemaType } from "../../shemas/LoginShema";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
+import { UserContext } from "../../context/UserContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +17,7 @@ const Login = () => {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { updateUser } = useContext(UserContext)!;
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -38,9 +41,24 @@ const Login = () => {
 
     setIsSubmitting(true);
     try {
-      // TODO: Replace with real login API request
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      navigate("/dashboard");
+      console.log(email, password);
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email,
+        password,
+      });
+
+      const { token, role } = response.data;
+
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(response.data);
+      }
+
+      if (role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/user/dashboard");
+      }
     } catch {
       setError("Invalid credentials. Please try again.");
     } finally {
