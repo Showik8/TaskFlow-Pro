@@ -38,4 +38,10 @@ export const API_PATHS = {
   IMAGE: {
     UPLOAD_IMAGE: "/api/auth/upload-image",
   },
+
+  PROJECT: {
+    GET_PROJECTS: "/api/project",
+    CREATE_PROJECT: "/api/project",
+    USERS_PROJECTS: "/api/project/users-projects",
+  },
 };

@@ -1,21 +1,22 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout";
-import ProfilePictureSelector from "../../components/ui/ProfilePictureSelector";
 import Input from "../../components/ui/Input";
 import { signupSchema, type SignUpSchemaType } from "../../shemas/signupShema";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
+import { UserContext } from "../../context/UserContext";
 
 const SignUp = () => {
-  const [profilePic, setProfilePic] = useState<File | null>(null);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [adminToken, setAdminToken] = useState("");
   const [fieldErrors, setFieldErrors] = useState<
     Partial<Record<keyof SignUpSchemaType, string>>
   >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { updateUser } = useContext(UserContext)!;
 
   const navigate = useNavigate();
 
@@ -25,11 +26,9 @@ const SignUp = () => {
     setError(null);
 
     const result = signupSchema.safeParse({
-      profilePic,
       fullName,
       email,
       password,
-      adminToken,
     });
 
     if (!result.success) {
@@ -42,11 +41,22 @@ const SignUp = () => {
       return;
     }
 
-    setIsSubmitting(true);
     try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      navigate("/dashboard");
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+        name: fullName,
+        email,
+        password,
+      });
+      console.log(response);
+
+      const { token } = response.data;
+
+      if (token) {
+        localStorage.setItem("token", token);
+        updateUser(response.data);
+      }
+
+      navigate("/user/dashboard");
     } catch {
       setError("Failed to create account. Please try again.");
     } finally {
@@ -63,12 +73,7 @@ const SignUp = () => {
 
       <div className="p-6 pt-0 w-full">
         <form onSubmit={handleSignUp} className="space-y-4">
-          <ProfilePictureSelector
-            image={profilePic!}
-            setImage={(value) => setProfilePic(value)}
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col">
             <div>
               <Input
                 label="Full Name"
@@ -113,22 +118,12 @@ const SignUp = () => {
             <p className="text-red-500 text-sm">{fieldErrors.password}</p>
           )}
 
-          <Input
-            label="Admin Token (Optional)"
-            value={adminToken}
-            placeholder="Enter token if admin"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setAdminToken(e.target.value)
-            }
-            type="text"
-          />
-
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
             type="submit"
-            disabled={isSubmitting}
             className="w-full py-2 rounded-md bg-primary text-white font-medium hover:opacity-90 transition disabled:opacity-60"
+            onClick={handleSignUp}
           >
             {isSubmitting ? "Creating account..." : "Sign Up"}
           </button>
