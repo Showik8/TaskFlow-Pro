@@ -1,6 +1,8 @@
-import { CheckSquare, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
+import image from "../../../public/favicon.png";
+
 import { ProjectSelector } from "./ProjectSelector";
 
 const DashboardHeader = () => {
@@ -11,7 +13,8 @@ const DashboardHeader = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary rounded-lg">
-              <CheckSquare className="w-8 h-8 text-white" />
+              {/* <CheckSquare className="w-8 h-8 text-white" /> */}
+              <img className="w-8 h-8" src={image} alt="Images" />
             </div>
             <h1 className="text-2xl font-bold">TaskFlow </h1>
           </div>

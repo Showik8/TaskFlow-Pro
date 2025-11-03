@@ -11,6 +11,7 @@ import { UserContext } from "./UserContext";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import axios from "axios";
+import type { Project } from "../shared/Types";
 
 interface ProjectContext {
   projects: Project[];
@@ -18,23 +19,8 @@ interface ProjectContext {
   setSelectedProject: CallableFunction;
   removeProject: CallableFunction;
   setCreatedNewProject: CallableFunction;
-}
-
-interface Project {
-  _id: string;
-  title: string;
-  description?: string;
-  members?: string[];
-  createdAt?: Date;
-  tasks?: Task[];
-  updatedAt?: Date;
-}
-export interface Task extends Document {
-  title: string;
-  description?: string;
-  priority?: "Low" | "Medium" | "High";
-  dueDate?: Date;
-  status: "todo" | "inProgress" | "completed";
+  currentProjectId: string;
+  SelectedProject: string;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -48,13 +34,28 @@ interface ProjectProviderProps {
 
 const ProjectProvider = ({ children }: ProjectProviderProps) => {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [SelectedProject, setSelectedProject] = useState<string>("");
   const [removed, setRemoved] = useState(false);
   const [createdNewProject, setCreatedNewProject] = useState(false);
+  const [SelectedProject, setSelectedProject] = useState<string>("");
+
   const { user } = useContext(UserContext)!;
 
+  const currentProjectId = getProjectID();
+
+  function getProjectID() {
+    const cur = projects.filter(
+      (project) => project.title == SelectedProject
+    )[0];
+    return cur?._id;
+  }
+
   useEffect(() => {
-    // If no user, don't fetch
+    if (projects.length > 0) {
+      setSelectedProject(projects[0].title);
+    }
+  }, [projects]);
+
+  useEffect(() => {
     if (!user) return;
 
     const controller = new AbortController();
@@ -70,7 +71,6 @@ const ProjectProvider = ({ children }: ProjectProviderProps) => {
         );
 
         setProjects(response.data.projects);
-        console.log("daifetcha");
       } catch (error) {
         if (axios.isCancel(error)) {
           console.log("❌ Request cancelled");
@@ -104,14 +104,6 @@ const ProjectProvider = ({ children }: ProjectProviderProps) => {
     }
   }
 
-  // const Tasks = async (projectName: string) => {
-  //   const filter = projects.filter((item) => item.title == projectName);
-  //   console.log(filter[0]);
-  // };
-
-  // Tasks(SelectedProject);
-  // removeProject(SelectedProject);
-
   return (
     <ProjectContext.Provider
       value={{
@@ -120,6 +112,8 @@ const ProjectProvider = ({ children }: ProjectProviderProps) => {
         setSelectedProject,
         removeProject,
         setCreatedNewProject,
+        currentProjectId,
+        SelectedProject,
       }}
     >
       {children}

@@ -1,24 +1,13 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
+import type { User } from "../shared/Types";
 
 interface UserContextType {
   user: User | null;
   loading: boolean;
   updateUser: (userData: User) => void;
   clearUser: () => void;
-}
-
-interface User {
-  createdAt: string;
-  email: string;
-  name: string;
-  profileImageUrl: string;
-  role: "admin" | "member";
-  updatedAt: string;
-  __v: number;
-  _id: string;
-  token: string;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

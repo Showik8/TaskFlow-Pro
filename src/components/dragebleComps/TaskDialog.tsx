@@ -1,26 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { format } from "date-fns";
-
-interface Task {
-  id?: string;
-  title: string;
-  description?: string;
-  status: string;
-  due_date?: string;
-  position?: number;
-  project_id?: string;
-}
+import { v4 as uuidv4 } from "uuid";
+import { ProjectContext } from "../../context/ProjectContext";
+import { UserContext } from "../../context/UserContext";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import type { Task } from "../../shared/Types";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
 
 interface TaskDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   task?: Task | null;
-  onSave: (task: Partial<Task>) => void;
+  onSave: CallableFunction;
   onDelete?: () => void;
   defaultStatus?: string;
+  setTasksChanged: CallableFunction;
 }
+
 const TaskDialog = ({
   open,
+  setTasksChanged,
   onOpenChange,
   task,
   onSave,
@@ -30,13 +31,16 @@ const TaskDialog = ({
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState(defaultStatus);
   const [dueDate, setDueDate] = useState<Date | undefined>();
+  const [priority, setPriority] = useState("Medium");
+  const { currentProjectId } = useContext(ProjectContext)!;
+  const { user } = useContext(UserContext)!;
 
   useEffect(() => {
     if (task) {
       setTitle(task.title);
       setDescription(task.description || "");
       setStatus(task.status);
-      setDueDate(task.due_date ? new Date(task.due_date) : undefined);
+      setDueDate(task.dueDate ? new Date(task.dueDate) : undefined);
     } else {
       setTitle("");
       setDescription("");
@@ -48,23 +52,55 @@ const TaskDialog = ({
   const handleSave = () => {
     if (!title.trim()) return;
 
-    onSave({
-      id: task?.id,
-      title: title.trim(),
-      description: description.trim() || undefined,
-      status,
-      due_date: dueDate ? format(dueDate, "yyyy-MM-dd") : undefined,
-    });
+    if (!currentProjectId) {
+      toast.error("Choose Project");
+    }
 
-    console.log({
-      id: task?.id,
+    const TaskData = {
+      projectId: currentProjectId,
+      id: uuidv4(),
       title: title.trim(),
       description: description.trim() || undefined,
       status,
-      due_date: dueDate ? format(dueDate, "yyyy-MM-dd") : undefined,
-    });
+      dueDate: dueDate ? format(dueDate, "yyyy-MM-dd") : undefined,
+      assignedTo: [user!._id],
+      priority: priority,
+    };
+
+    onSave(TaskData);
 
     onOpenChange(false);
+  };
+  const handleEdit = async () => {
+    if (!task) return; // safety check
+    if (!title.trim()) return;
+    if (!currentProjectId) {
+      toast.error("Choose Project");
+      return;
+    }
+
+    const updatedTask = {
+      title: title.trim(),
+      description: description.trim() || undefined,
+      status,
+      dueDate: dueDate ? format(dueDate, "yyyy-MM-dd") : undefined,
+      assignedTo: task.assignedTo || [user!._id],
+      priority,
+      projectId: currentProjectId,
+    };
+
+    try {
+      // Call your backend update endpoint
+      const res = await axiosInstance.put(
+        API_PATHS.TASKS.UPDATE_TASK + task._id,
+        updatedTask
+      );
+      toast.success(res.data.message || "Task updated successfully");
+      setTasksChanged((pre: boolean) => !pre);
+      onOpenChange(false); // close modal
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!open) return null;
@@ -123,8 +159,24 @@ const TaskDialog = ({
               className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
             >
               <option value="todo">To Do</option>
-              <option value="in_progress">In Progress</option>
-              <option value="done">Done</option>
+              <option value="inProgress">In Progress</option>
+              <option value="completed">completed</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label htmlFor="status" className="block font-medium">
+              Priority
+            </label>
+            <select
+              id="status"
+              value={status}
+              onChange={(e) => setPriority(e.target.value)}
+              className="w-full border rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
             </select>
           </div>
 
@@ -144,9 +196,7 @@ const TaskDialog = ({
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex justify-end items-center mt-6">
-          {/* Cancel / Save buttons */}
           <div className="flex gap-2">
             <button
               onClick={() => onOpenChange(false)}
@@ -155,7 +205,7 @@ const TaskDialog = ({
               Cancel
             </button>
             <button
-              onClick={handleSave}
+              onClick={task ? handleEdit : handleSave}
               disabled={!title.trim()}
               className="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50 hover:bg-blue-700"
             >
@@ -172,6 +222,7 @@ const TaskDialog = ({
           ✕
         </button>
       </div>
+      <Toaster position="top-center" />
     </div>
   );
 };

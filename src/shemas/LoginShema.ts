@@ -1,4 +1,3 @@
-// src/schemas/loginSchema.ts
 import { z } from "zod";
 
 export const loginSchema = z.object({

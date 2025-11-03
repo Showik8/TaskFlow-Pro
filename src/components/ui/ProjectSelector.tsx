@@ -9,24 +9,7 @@ import { ProjectContext } from "../../context/ProjectContext";
 import { Trash } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
-
-export interface Task extends Document {
-  title: string;
-  description?: string;
-  priority?: "Low" | "Medium" | "High";
-  dueDate?: Date;
-  status: "todo" | "inProgress" | "completed";
-}
-
-interface Project {
-  _id: string;
-  title: string;
-  description?: string;
-  members?: string[];
-  createdAt?: Date;
-  tasks?: Task[];
-  updatedAt?: Date;
-}
+import type { Project } from "../../shared/Types";
 
 export const ProjectSelector = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -38,6 +21,7 @@ export const ProjectSelector = () => {
     setSelectedProject,
     removeProject,
     setCreatedNewProject,
+    SelectedProject,
   } = useContext(ProjectContext)!;
 
   const handleCreateProject = async (project: {
@@ -62,14 +46,11 @@ export const ProjectSelector = () => {
       );
       setCreatedNewProject(true);
       toast.success(response.data.message);
+      console.log(newProject);
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
-
-  // const SelectedProject = (t: EventTarget) => {
-  //   setSelectedProject(t);
-  // };
 
   return (
     <div className="w-full flex justify-between pr-10">
@@ -77,18 +58,12 @@ export const ProjectSelector = () => {
       <div className=" flex items-center gap-3 px-5">
         <FolderOpen className="h-5 w-5 text-blue-600" />
         <select
-          name="Project Selection"
           onChange={(e) => setSelectedProject(e.target.value)}
+          name="Project Selection"
           className="border rounded px-3 py-2 w-[250px] focus:ring focus:outline-none"
         >
-          {/* <option value="">Select a project</option> */}
           {projects.length > 0 ? (
-            <option
-              onLoad={() => setSelectedProject(projects[0].title)}
-              value={projects[0].title}
-            >
-              {projects[0].title}
-            </option>
+            <option value={SelectedProject}>{SelectedProject}</option>
           ) : (
             <option value="">Select a project</option>
           )}

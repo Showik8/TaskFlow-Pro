@@ -2,12 +2,11 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout";
 import Input from "../../components/ui/Input";
-import { CheckSquare } from "lucide-react";
 import { loginSchema, type LoginSchemaType } from "../../shemas/LoginShema";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { UserContext } from "../../context/UserContext";
-
+import image from "../../../public/favicon.png";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,7 +40,6 @@ const Login = () => {
 
     setIsSubmitting(true);
     try {
-      console.log(email, password);
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
         email,
         password,
@@ -71,7 +69,8 @@ const Login = () => {
       <div className="flex flex-col p-6 space-y-4 text-center">
         <div className="flex justify-center">
           <div className="p-3 bg-primary rounded-xl">
-            <CheckSquare className="w-8 h-8 text-white" />
+            {/* <CheckSquare className="w-8 h-8 text-white" /> */}
+            <img className="w-8 h-8" src={image} alt="Images" />
           </div>
         </div>
         <div>

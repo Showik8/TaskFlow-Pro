@@ -2,13 +2,17 @@ import { Droppable } from "@hello-pangea/dnd";
 import TaskCard from "./TaskCard";
 import TaskDialog from "./TaskDialog";
 import { useState } from "react";
-
-interface ColumnProps {
-  columnId: string;
-  items: string[];
-}
+import type { Task } from "../../shared/Types";
 
 type ColumnType = "todo" | "inProgress" | "completed";
+
+interface ColumnProps {
+  columnId: ColumnType;
+  todos: Task[];
+  onSave: (task: Task) => void;
+  onDelete: (id: string) => void;
+  setTasksChanged: CallableFunction;
+}
 
 const columnColors: Record<ColumnType, string> = {
   todo: "border-gray-300 bg-gray-100",
@@ -16,12 +20,20 @@ const columnColors: Record<ColumnType, string> = {
   completed: "border-green-400 bg-green-100",
 };
 
-const Column = ({ columnId, items }: ColumnProps) => {
-  const color = columnColors[columnId as ColumnType];
-  const [opneModal, setOpenModal] = useState(false);
+const Column = ({
+  columnId,
+  todos,
+  onSave,
+  onDelete,
+  setTasksChanged,
+}: ColumnProps) => {
+  const color = columnColors[columnId];
+  const [openModal, setOpenModal] = useState(false);
+  const [task, setTask] = useState<Task | null>(null);
 
-  function onSave() {
-    console.log("saved");
+  async function onEdit(data: Task) {
+    setOpenModal(true);
+    setTask(data);
   }
 
   return (
@@ -30,19 +42,16 @@ const Column = ({ columnId, items }: ColumnProps) => {
         <div
           ref={provided.innerRef}
           {...provided.droppableProps}
-          className={` flex flex-col rounded-xl p-4 shadow border-l-4 ${color} md:w-full sm:w-full`}
+          className={`flex flex-col rounded-xl p-4 shadow border-l-4 ${color}`}
         >
-          {/* Column Header */}
+          {/* Header */}
           <div className="flex justify-between items-center mb-4">
-            <div>
-              <h2 className="font-semibold text-lg capitalize">
-                {columnId.replace(/([A-Z])/g, " ")}
-              </h2>
-              <p className="text-sm text-gray-500">{items.length} tasks</p>
-            </div>
+            <h2 className="font-semibold text-lg capitalize">
+              {columnId} ({todos.length})
+            </h2>
             <button
-              onClick={() => setOpenModal(!opneModal)}
-              className="text-xl font-bold text-gray-500 hover:text-gray-700"
+              onClick={() => setOpenModal(true)}
+              className="text-xl font-bold text-gray-600 hover:text-gray-800"
             >
               +
             </button>
@@ -50,14 +59,25 @@ const Column = ({ columnId, items }: ColumnProps) => {
 
           {/* Task List */}
           <div className="flex-1 flex flex-col gap-3 min-h-[100px]">
-            {items.map((task, index) => (
-              <TaskCard key={task} task={task} index={index} />
+            {todos.map((task, index) => (
+              <TaskCard
+                setTasksChanged={setTasksChanged}
+                onDelete={onDelete}
+                onEdit={onEdit}
+                key={task._id}
+                task={task}
+                index={index}
+              />
             ))}
             {provided.placeholder}
           </div>
+
+          {/* Create Task Modal */}
           <TaskDialog
+            setTasksChanged={setTasksChanged}
+            task={task}
             onSave={onSave}
-            open={opneModal}
+            open={openModal}
             onOpenChange={setOpenModal}
           />
         </div>

@@ -3,9 +3,6 @@ export const BASE_URL = "http://localhost:8000";
 type userId = {
   userId: string;
 };
-type taskId = {
-  taskId: string;
-};
 
 export const API_PATHS = {
   AUTH: {
@@ -23,16 +20,11 @@ export const API_PATHS = {
   },
 
   TASKS: {
-    GET_DASHBOARD_DATA: "/api/tasks/dashboard-data",
-    GET_USER_DASHBOARD_DATA: "/api/tasks/user-dashboard-data",
-    GET_ALL_TASKS: "/api/tasks",
-    GET_TASK_BY_ID: (taskId: taskId) => `/api/tasks/${taskId}`,
-    CREATE_TASK: "/api/taskts",
-    UPDATE_TASK: (taskId: taskId) => `/api/tasks/${taskId}`,
-    DELETE_TASK: (taskId: taskId) => `/api/tasks/${taskId}`,
-
-    UPDATE_TASK_STATUS: (taskId: taskId) => `/api/tasks/${taskId}/status`,
-    UPDATE_TASK_CHECKLIST: (taskId: taskId) => `/api/tasks/${taskId}/todo`,
+    CREATE_TASK: "/api/task",
+    GET_TASKS: `/api/task/`,
+    DELTE_TASK: "/api/task/",
+    UPDATE_TASK: "/api/task/",
+    UPDATE_TASK_STATUS: "/api/task/status/",
   },
 
   IMAGE: {
