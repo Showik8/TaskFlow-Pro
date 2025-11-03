@@ -3,7 +3,7 @@ import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
 
 interface UserContextType {
-  user: User;
+  user: User | null;
   loading: boolean;
   updateUser: (userData: User) => void;
   clearUser: () => void;

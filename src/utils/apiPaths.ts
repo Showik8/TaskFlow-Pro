@@ -43,5 +43,6 @@ export const API_PATHS = {
     GET_PROJECTS: "/api/project",
     CREATE_PROJECT: "/api/project",
     USERS_PROJECTS: "/api/project/users-projects",
+    DElETE_PROJCETS: "/api/project/",
   },
 };

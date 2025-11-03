@@ -1,10 +1,14 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Plus, FolderOpen } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import ProjectModal from "./ProjectModal";
 import { API_PATHS } from "../../utils/apiPaths";
 import axiosInstance from "../../utils/axiosInstance";
 import { UserContext } from "../../context/UserContext";
+import { ProjectContext } from "../../context/ProjectContext";
+import { Trash } from "lucide-react";
+import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 export interface Task extends Document {
   title: string;
@@ -15,7 +19,7 @@ export interface Task extends Document {
 }
 
 interface Project {
-  id: string;
+  _id: string;
   title: string;
   description?: string;
   members?: string[];
@@ -26,9 +30,15 @@ interface Project {
 
 export const ProjectSelector = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [projects, setProjects] = useState<Project[]>([]);
 
   const { user } = useContext(UserContext)!;
+  const {
+    projects,
+    setProjects,
+    setSelectedProject,
+    removeProject,
+    setCreatedNewProject,
+  } = useContext(ProjectContext)!;
 
   const handleCreateProject = async (project: {
     title: string;
@@ -37,8 +47,7 @@ export const ProjectSelector = () => {
   }) => {
     const newProject = { ...project, id: uuidv4() };
 
-    // Update local state immediately so the new project shows in the select
-    setProjects((prev) => [...prev, newProject]);
+    setProjects((prev: Project[]) => [...prev, newProject]);
 
     try {
       // Send to backend
@@ -48,43 +57,43 @@ export const ProjectSelector = () => {
           title: newProject.title,
           description: newProject.description,
           members: newProject.members,
-          createdBy: user._id,
+          createdBy: user?._id,
         }
       );
-      console.log("Project created:", response.data);
+      setCreatedNewProject(true);
+      toast.success(response.data.message);
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
 
-  useEffect(() => {
-    async function getProjects() {
-      if (!user) return;
-
-      try {
-        const userId = user._id;
-        const response = await axiosInstance.get(
-          `${API_PATHS.PROJECT.USERS_PROJECTS}/${userId}`
-        );
-        setProjects(response.data.projects);
-        console.log(response.data.projects);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    }
-
-    getProjects();
-  }, [user]);
+  // const SelectedProject = (t: EventTarget) => {
+  //   setSelectedProject(t);
+  // };
 
   return (
-    <>
+    <div className="w-full flex justify-between pr-10">
       {/* Project selector */}
-      <div className="w-full flex items-center gap-3 px-5">
+      <div className=" flex items-center gap-3 px-5">
         <FolderOpen className="h-5 w-5 text-blue-600" />
-        <select className="border rounded px-3 py-2 w-[250px] focus:ring focus:outline-none">
-          <option value="">Select a project</option>
+        <select
+          name="Project Selection"
+          onChange={(e) => setSelectedProject(e.target.value)}
+          className="border rounded px-3 py-2 w-[250px] focus:ring focus:outline-none"
+        >
+          {/* <option value="">Select a project</option> */}
+          {projects.length > 0 ? (
+            <option
+              onLoad={() => setSelectedProject(projects[0].title)}
+              value={projects[0].title}
+            >
+              {projects[0].title}
+            </option>
+          ) : (
+            <option value="">Select a project</option>
+          )}
           {projects.map((project, ind) => (
-            <option key={project.id + ind.toString()} value={project.title}>
+            <option key={project._id + ind.toString()} value={project.title}>
               {project.title}
             </option>
           ))}
@@ -97,6 +106,12 @@ export const ProjectSelector = () => {
         >
           <Plus className="h-4 w-4" />
         </button>
+        <div
+          className="flex gap-5 hover:bg-red-200 rounded-2xl justify-center items-center p-2"
+          onClick={() => removeProject()}
+        >
+          <Trash color="red" />
+        </div>
       </div>
 
       {/* Project creation modal */}
@@ -105,6 +120,8 @@ export const ProjectSelector = () => {
         onClose={() => setIsDialogOpen(false)}
         onCreate={handleCreateProject}
       />
-    </>
+
+      <Toaster position="top-center" />
+    </div>
   );
 };
