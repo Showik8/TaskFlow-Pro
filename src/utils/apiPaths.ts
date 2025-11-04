@@ -1,22 +1,10 @@
 export const BASE_URL = "http://localhost:8000";
 
-type userId = {
-  userId: string;
-};
-
 export const API_PATHS = {
   AUTH: {
     REGISTER: "/api/auth/register",
     LOGIN: "/api/auth/login",
     GET_PROFILE: "/api/auth/profile",
-  },
-
-  USERS: {
-    GET_ALL_USERS: "",
-    GET_USER_BY_ID: (userId: userId) => `/api/users/${userId}`,
-    CREATE_USER: "",
-    UPDATE_USER: (userId: userId) => `/api/users/${userId}`,
-    DELETE_USER: (userId: userId) => `/api/users/${userId}`,
   },
 
   TASKS: {

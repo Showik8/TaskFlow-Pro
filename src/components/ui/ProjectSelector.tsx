@@ -54,9 +54,9 @@ export const ProjectSelector = () => {
   };
 
   return (
-    <div className="w-full flex justify-between pr-10">
+    <div className="w-full flex justify-center lg:justify-between pr-10 ">
       {/* Project selector */}
-      <div className=" flex items-center gap-3 px-5">
+      <div className=" flex items-center gap-3 px-5 flex-col sm:flex-row">
         <FolderOpen className="h-5 w-5 text-blue-600" />
         <select
           onChange={(e) => setSelectedProject(e.target.value)}
@@ -90,6 +90,10 @@ export const ProjectSelector = () => {
         </div>
         <TaskFilters />
       </div>
+
+      <h1 className="hidden lg:block text-2xl font-semibold text-gray-800 tracking-wide">
+        {user?.name}
+      </h1>
 
       {/* Project creation modal */}
       <ProjectModal

@@ -103,6 +103,25 @@ const Board = () => {
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="w-full p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {/* {tasks ? (
+          (Object.keys(tasks) as ColumnType[]).map((columnKey) => (
+            <Column
+              setTasksChanged={setTasksChanged}
+              key={columnKey}
+              columnId={columnKey}
+              todos={tasks[columnKey]}
+              onSave={onSave}
+              onDelete={onDelete}
+            />
+          ))
+        ) : (
+          <>
+            <Seed title={"todo"} />
+            <Seed title={"inProgress"} />
+            <Seed title={"completed"} />
+          </>
+        )} */}
+
         {tasks &&
           (Object.keys(tasks) as ColumnType[]).map((columnKey) => (
             <Column
@@ -121,3 +140,29 @@ const Board = () => {
 };
 
 export default Board;
+
+// const Seed = ({ title }: { title: ColumnType }) => {
+//   const color = {
+//     todo: "border-gray-300 bg-gray-100",
+//     inProgress: "border-blue-400 bg-blue-100",
+//     completed: "border-green-400 bg-green-100",
+//   };
+//   return (
+//     <>
+//       <div
+//         className={`flex flex-col rounded-xl p-4 shadow border-l-4 ${color[title]}`}
+//       >
+//         {/* Header */}
+//         <div className="flex justify-between items-center mb-4">
+//           <h2 className="font-semibold text-lg capitalize">{title}</h2>
+//           <button className="text-xl font-bold text-gray-600 hover:text-gray-800">
+//             +
+//           </button>
+//         </div>
+
+//         {/* Task List */}
+//         <div className="flex-1 flex flex-col gap-3 min-h-[100px]"></div>
+//       </div>
+//     </>
+//   );
+// };

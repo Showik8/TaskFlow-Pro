@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import axios from "axios";
 import type { Project } from "../shared/Types";
+import DashboardHeader from "../components/ui/DashboardHeader";
 
 interface ProjectContext {
   projects: Project[];
@@ -116,7 +117,9 @@ const ProjectProvider = ({ children }: ProjectProviderProps) => {
         SelectedProject,
       }}
     >
+      {user && <DashboardHeader />}
       {children}
+
       <Toaster position="top-center" />
     </ProjectContext.Provider>
   );

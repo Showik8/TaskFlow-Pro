@@ -24,26 +24,32 @@ const TaskCard = ({ task, index, onDelete, onEdit }: TaskCardProps) => {
             snapshot.isDragging ? "bg-gray-50" : ""
           }`}
         >
-          {/* Trash Icon */}
           <button
+            aria-label="Remove Task"
             onClick={() => onDelete(task._id)}
-            className="absolute top-2 right-2 text-gray-400 hover:text-yellow-500"
+            className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center rounded-md text-gray-400 hover:text-red-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-500"
           >
             <Trash className="h-4 w-4" />
           </button>
           <button
+            aria-label="Edit Task"
             onClick={() => onEdit(task)}
-            className="absolute top-2 right-10 text-gray-400 hover:text-yellow-500"
+            className="absolute top-2 right-10 w-10 h-10 flex items-center justify-center rounded-md text-gray-400 hover:text-yellow-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-yellow-500"
           >
             <Edit className="h-4 w-4" />
           </button>
 
           {/* Task Title */}
-          <h3 className="font-medium">{task.title.split("_").join(" ")}</h3>
+          <h3 aria-label="task name" className="font-medium">
+            {task.title.split("_").join(" ")}
+          </h3>
 
           {/* Task Description */}
           {task.description && (
-            <p className="text-sm text-gray-400 line-clamp-2 mt-1">
+            <p
+              aria-label="task Description"
+              className="text-sm text-gray-700 line-clamp-2 mt-1"
+            >
               {task.description}
             </p>
           )}
@@ -52,6 +58,7 @@ const TaskCard = ({ task, index, onDelete, onEdit }: TaskCardProps) => {
           <div className="flex justify-between items-center mt-2">
             {task.priority && (
               <span
+                aria-label="task priority"
                 className={`text-xs px-2 py-1 rounded-full ${
                   task.priority === "High"
                     ? "bg-red-500 text-white"
@@ -64,7 +71,10 @@ const TaskCard = ({ task, index, onDelete, onEdit }: TaskCardProps) => {
               </span>
             )}
             {task.dueDate && (
-              <span className="text-xs text-gray-500">
+              <span
+                aria-label="task Deadline"
+                className="text-xs text-gray-500"
+              >
                 {new Date(task.dueDate).toLocaleDateString()}
               </span>
             )}

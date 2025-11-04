@@ -1,73 +1,103 @@
-# React + TypeScript + Vite
+# TaskFlow - Task Management Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TaskFlow is a modern task management application built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Setup Guide
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Prerequisites
+- Node.js (v16.0.0 or higher)
+- npm (v8.0.0 or higher)
 
-## React Compiler
+### Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/TaskFlow_front.git
+   cd TaskFlow_front
+   ```
 
-## Expanding the ESLint configuration
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following variables:
+   ```
+   VITE_API_URL=http://localhost:3000/api
+   VITE_AUTH_TOKEN_KEY=taskflow_auth_token
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Run Scripts
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- **Development server**:
+  ```bash
+  npm run dev
+  ```
+  This starts the development server at `http://localhost:5173`.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Build for production**:
+  ```bash
+  npm run build
+  ```
+  This creates a production-ready build in the `dist` directory.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Preview production build**:
+  ```bash
+  npm run preview
+  ```
+  This serves the production build locally for preview.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Test Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Run tests**:
+  ```bash
+  npm run test
+  ```
+
+- **Run tests with coverage**:
+  ```bash
+  npm run test:coverage
+  ```
+
+## Demo User Credentials
+
+For testing purposes, you can use the following demo accounts:
+
+- **Admin User**:
+  - Email: admin@taskflow.com
+  - Password: Admin123!
+
+- **Regular User**:
+  - Email: user@taskflow.com
+  - Password: User123!
+
+## User Stories
+
+1. **User Authentication**
+   - As a user, I can register for a new account
+   - As a user, I can log in to my account
+   - As a user, I can reset my password
+
+2. **Task Management**
+   - As a user, I can create new tasks
+   - As a user, I can view all my tasks
+   - As a user, I can update task details
+   - As a user, I can delete tasks
+   - As a user, I can mark tasks as complete
+
+3. **Task Organization**
+   - As a user, I can categorize tasks
+   - As a user, I can set priorities for tasks
+   - As a user, I can set due dates for tasks
+   - As a user, I can filter and sort tasks
+
+4. **Collaboration**
+   - As a user, I can share tasks with other users
+   - As a user, I can assign tasks to team members
+   - As a user, I can comment on tasks
+
+5. **Notifications**
+   - As a user, I receive notifications for upcoming due dates
+   - As a user, I receive notifications for task assignments
+   - As a user, I can customize notification preferences

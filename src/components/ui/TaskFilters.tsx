@@ -34,7 +34,7 @@ const TaskFilters = () => {
   }
 
   return (
-    <div className="ml-40">
+    <div className="md:ml-40 ">
       <div className="flex justify-center items-center border-1 border-gray-300 rounded-2xl px-2 font-semibold">
         <Input
           value={taskName}
