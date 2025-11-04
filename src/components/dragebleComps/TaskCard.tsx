@@ -39,7 +39,7 @@ const TaskCard = ({ task, index, onDelete, onEdit }: TaskCardProps) => {
           </button>
 
           {/* Task Title */}
-          <h3 className="font-medium">{task.title}</h3>
+          <h3 className="font-medium">{task.title.split("_").join(" ")}</h3>
 
           {/* Task Description */}
           {task.description && (

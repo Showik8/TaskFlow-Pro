@@ -79,6 +79,7 @@ const Column = ({
             onSave={onSave}
             open={openModal}
             onOpenChange={setOpenModal}
+            setTask={setTask}
           />
         </div>
       )}

@@ -17,6 +17,7 @@ interface TaskDialogProps {
   onDelete?: () => void;
   defaultStatus?: string;
   setTasksChanged: CallableFunction;
+  setTask: CallableFunction;
 }
 
 const TaskDialog = ({
@@ -24,6 +25,7 @@ const TaskDialog = ({
   setTasksChanged,
   onOpenChange,
   task,
+  setTask,
   onSave,
   defaultStatus = "todo",
 }: TaskDialogProps) => {
@@ -59,7 +61,7 @@ const TaskDialog = ({
     const TaskData = {
       projectId: currentProjectId,
       id: uuidv4(),
-      title: title.trim(),
+      title: title.trim().toLowerCase(),
       description: description.trim() || undefined,
       status,
       dueDate: dueDate ? format(dueDate, "yyyy-MM-dd") : undefined,
@@ -80,7 +82,7 @@ const TaskDialog = ({
     }
 
     const updatedTask = {
-      title: title.trim(),
+      title: title.trim().toLowerCase(),
       description: description.trim() || undefined,
       status,
       dueDate: dueDate ? format(dueDate, "yyyy-MM-dd") : undefined,
@@ -97,10 +99,11 @@ const TaskDialog = ({
       );
       toast.success(res.data.message || "Task updated successfully");
       setTasksChanged((pre: boolean) => !pre);
-      onOpenChange(false); // close modal
     } catch (error) {
       console.error(error);
     }
+    onOpenChange(false);
+    setTask(null); // close modal
   };
 
   if (!open) return null;

@@ -7,6 +7,8 @@ export type Task = {
   priority?: "Low" | "Medium" | "High";
   projectId: string;
   assignedTo: string[];
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type Project = {

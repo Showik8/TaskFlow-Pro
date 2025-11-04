@@ -10,6 +10,7 @@ import { Trash } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import type { Project } from "../../shared/Types";
+import TaskFilters from "./TaskFilters";
 
 export const ProjectSelector = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -87,6 +88,7 @@ export const ProjectSelector = () => {
         >
           <Trash color="red" />
         </div>
+        <TaskFilters />
       </div>
 
       {/* Project creation modal */}

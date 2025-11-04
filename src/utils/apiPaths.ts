@@ -25,10 +25,7 @@ export const API_PATHS = {
     DELTE_TASK: "/api/task/",
     UPDATE_TASK: "/api/task/",
     UPDATE_TASK_STATUS: "/api/task/status/",
-  },
-
-  IMAGE: {
-    UPLOAD_IMAGE: "/api/auth/upload-image",
+    GET_TASK_BY_TITLE: "/api/task?",
   },
 
   PROJECT: {

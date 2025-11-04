@@ -75,7 +75,6 @@ const Board = () => {
         const res = await axiosInstance.get(
           API_PATHS.TASKS.GET_TASKS + currentProjectId
         );
-        console.log(res.data);
 
         const grouped: TasksState = {
           todo: res.data.filter((t: Task) => t.status === "todo"),
