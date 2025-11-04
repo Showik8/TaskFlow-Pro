@@ -220,7 +220,7 @@ const TaskDialog = ({
         {/* Close overlay */}
         <button
           onClick={() => onOpenChange(false)}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+          className="absolute top-6 right-6 text-gray-500 hover:text-gray-700 text-2xl "
         >
           ✕
         </button>

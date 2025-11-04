@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Input from "./Input";
 import { SearchCheckIcon } from "lucide-react";
 import axiosInstance from "../../utils/axiosInstance";
@@ -33,9 +33,24 @@ const TaskFilters = () => {
     }
   }
 
+  useEffect(() => {
+    const handleEnter = (e: KeyboardEvent) => {
+      console.log(taskName);
+      if (e.key === "Enter" && taskName && currentProjectId) {
+        searchTask();
+      }
+    };
+
+    window.addEventListener("keydown", handleEnter);
+
+    return () => {
+      window.removeEventListener("keydown", handleEnter);
+    };
+  }, [taskName, currentProjectId]);
+
   return (
-    <div className="md:ml-40 ">
-      <div className="flex justify-center items-center border-1 border-gray-300 rounded-2xl px-2 font-semibold">
+    <div className="w-full px-20 ">
+      <div className="flex justify-between items-center border-1 border-gray-300 rounded-2xl px-2 font-semibold w-full">
         <Input
           value={taskName}
           outline={false}

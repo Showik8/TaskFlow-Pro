@@ -56,42 +56,46 @@ export const ProjectSelector = () => {
   return (
     <div className="w-full flex justify-center lg:justify-between pr-10 ">
       {/* Project selector */}
-      <div className=" flex items-center gap-3 px-5 flex-col sm:flex-row">
-        <FolderOpen className="h-5 w-5 text-blue-600" />
-        <select
-          onChange={(e) => setSelectedProject(e.target.value)}
-          name="Project Selection"
-          className="border rounded px-3 py-2 w-[250px] focus:ring focus:outline-none"
-        >
-          {projects.length > 0 ? (
-            <option value={SelectedProject}>{SelectedProject}</option>
-          ) : (
-            <option value="">Select a project</option>
-          )}
-          {projects.map((project, ind) => (
-            <option key={project._id + ind.toString()} value={project.title}>
-              {project.title}
-            </option>
-          ))}
-        </select>
+      <div className=" flex items-center gap-3 px-5 flex-col sm:flex-row w-full ">
+        <div className=" flex justify-center items-center gap-2 ">
+          <FolderOpen className="h-8 w-8 text-blue-600" />
+          <select
+            onChange={(e) => setSelectedProject(e.target.value)}
+            name="Project Selection"
+            className="border rounded px-3 py-2 w-60  focus:ring focus:outline-none"
+          >
+            {projects.length > 0 ? (
+              <option value={SelectedProject}>{SelectedProject}</option>
+            ) : (
+              <option value="">Select a project</option>
+            )}
+            {projects.map((project, ind) => (
+              <option key={project._id + ind.toString()} value={project.title}>
+                {project.title}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <button
-          onClick={() => setIsDialogOpen(true)}
-          className="border rounded p-2 hover:bg-gray-100"
-          aria-label="Create new project"
-        >
-          <Plus className="h-4 w-4" />
-        </button>
-        <div
-          className="flex gap-5 hover:bg-red-200 rounded-2xl justify-center items-center p-2"
-          onClick={() => removeProject()}
-        >
-          <Trash color="red" />
+        <div className="flex gap-2">
+          <button
+            onClick={() => setIsDialogOpen(true)}
+            className="border rounded p-2 hover:bg-gray-100"
+            aria-label="Create new project"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+          <button
+            className="flex gap-5 hover:bg-red-200 rounded-2xl justify-center items-center p-2"
+            onClick={() => removeProject()}
+          >
+            <Trash color="red" />
+          </button>
         </div>
         <TaskFilters />
       </div>
 
-      <h1 className="hidden lg:block text-2xl font-semibold text-gray-800 tracking-wide">
+      <h1 className="hidden lg:block text-2xl font-semibold text-gray-800 tracking-wide whitespace-nowrap">
         {user?.name}
       </h1>
 

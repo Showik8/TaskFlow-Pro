@@ -39,7 +39,7 @@ const ProjectModal: FC<ProjectModalProps> = ({ isOpen, onClose, onCreate }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-2">
       <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative animate-fadeIn">
         <h2 className="text-xl font-semibold mb-5">Create New Project</h2>
 

@@ -103,25 +103,6 @@ const Board = () => {
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="w-full p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {/* {tasks ? (
-          (Object.keys(tasks) as ColumnType[]).map((columnKey) => (
-            <Column
-              setTasksChanged={setTasksChanged}
-              key={columnKey}
-              columnId={columnKey}
-              todos={tasks[columnKey]}
-              onSave={onSave}
-              onDelete={onDelete}
-            />
-          ))
-        ) : (
-          <>
-            <Seed title={"todo"} />
-            <Seed title={"inProgress"} />
-            <Seed title={"completed"} />
-          </>
-        )} */}
-
         {tasks &&
           (Object.keys(tasks) as ColumnType[]).map((columnKey) => (
             <Column
