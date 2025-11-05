@@ -59,7 +59,7 @@ const Login = () => {
         navigate("/user/dashboard");
       }
     } catch {
-      setError("Invalid credentials. Please try again.");
+      setError("Server Error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
