@@ -1,54 +1,35 @@
-# TaskFlow Architecture
+### TaskFlow Pro Architecture
 
-This document outlines the architecture of the TaskFlow application, including system diagrams, data models, API endpoints, state management approach, and error handling strategy.
+This document covers diagrams, data models, API endpoints, state management rationale, and error-handling.
 
-## System Architecture Diagram
-
+## System Diagram (high-level)
 ```
-┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│                 │      │                 │      │                 │
-│  React Frontend │◄────►│   API Gateway   │◄────►│  Backend Server │
-│                 │      │                 │      │                 │
-└─────────────────┘      └─────────────────┘      └─────────────────┘
-                                                          │
-                                                          │
-                                                          ▼
-                                               ┌─────────────────────┐
-                                               │                     │
-                                               │      Database       │
-                                               │                     │
-                                               └─────────────────────┘
+React (Vite) SPA ── axios ──► REST API (Backend) ──► Database
+                         ▲
+                         │
+                 Interceptors
 ```
 
-### Component Architecture
-
+## Component/State Diagram (frontend)
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        React App                            │
-│                                                             │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
-│  │             │  │             │  │                     │  │
-│  │    Auth     │  │ Task Module │  │ Project Module.     │  │
-│  │   Module    │  │             │  │                     │  │
-│  │             │  │             │  │                     │  │
-│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
-│                                                             │
-│  ┌─────────────┐  ┌─────────────┐                           │
-│  │             │  │             │                           │
-│  │    User     │  │  Dashboard  │                           │
-│  │   Module    │  │   Module    │                           │
-│  │             │  │             │                           │
-│  └─────────────┘  └─────────────┘                           │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+App
+├─ contexts
+│  ├─ UserContext (auth, token, profile)
+│  └─ ProjectContext (projects, selected project)
+├─ pages
+│  ├─ Auth/Login, Auth/SignUp
+│  └─ User/UserDashboard
+├─ components
+│  ├─ ui (DashboardHeader, Input, etc.)
+│  └─ dragebleComps (Drag, Column, TaskCard, TaskDialog)
+└─ utils
+   ├─ axiosInstance (baseURL, auth header, 401 redirect)
+   └─ apiPaths (BASE_URL, endpoints)
 ```
 
-## Data Models
-
-### User Model
-
+## Data Models (from `src/shared/Types.ts`)
 ```typescript
- interface type Task = {
+export type Task = {
   _id: string;
   title: string;
   description?: string;
@@ -60,12 +41,8 @@ This document outlines the architecture of the TaskFlow application, including s
   createdAt?: string;
   updatedAt?: string;
 };
-```
 
-### Task Model
-
-```typescript
-interface  Project = {
+export type Project = {
   _id: string;
   title: string;
   description?: string;
@@ -74,41 +51,55 @@ interface  Project = {
   tasks?: Task[];
   updatedAt?: Date;
 };
-```
 
-### Comment Model
-
-```typescript
-interface  type User = {
+export type User = {
   createdAt: string;
   email: string;
   name: string;
   profileImageUrl: string;
-  role: "member";
+  role: "admin" | "member";
   updatedAt: string;
   __v: number;
   _id: string;
   token: string;
 };
-
 ```
 
-## API Endpoints
+## API Endpoints (from `src/utils/apiPaths.ts`)
+Base URL: configured in code as `BASE_URL`.
 
-### Authentication Endpoints
+- Auth
+  - POST `/api/auth/register`
+  - POST `/api/auth/login`
+  - GET `/api/auth/profile`
 
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login a user
+- Project
+  - GET `/api/project`
+  - POST `/api/project`
+  - GET `/api/project/users-projects/{userId}`
+  - DELETE `/api/project/{projectId}`
 
-### Task Endpoints
+- Task
+  - POST `/api/task`
+  - GET `/api/task/`
+  - GET `/api/task?title=...` (search by title)
+  - PUT `/api/task/{taskId}`
+  - DELETE `/api/task/{taskId}`
+  - PUT `/api/task/status/{taskId}` (status update)
 
-- `GET /api/task` - Get all tasks for current user
-- `POST /api/task` - Create a new task
-- `GET /api/task/{title}` - Get task by Title
-- `PUT /api/task/:id` - Update task
-- `DELETE /api/task/:id` - Delete task
-- `PUT /api/tasks/status` - Update task status
+See `openapi.yaml` for a formal contract.
 
-## Project Endpoints
+## State Management Rationale
+- Lightweight React Context is used for global state that truly needs to be shared:
+  - `UserContext` handles token presence, profile fetch (`/api/auth/profile`), and updates on login.
+  - `ProjectContext` loads the current user's projects, tracks selection, and supports deletion.
+- Local component state (via `useState`) manages form fields and transient UI state.
+- This keeps bundle size small and avoids over-engineering with heavier state libraries.
 
--`GET /api/project` - Get all projects for current user -`POST /api/project/` - Create new project -`POST /api/project/:id` - Remove project
+## Error-Handling Approach
+- Request-level handling via `axios` interceptors:
+  - Request: attach `Authorization: Bearer <token>` if present.
+  - Response: on 401, redirect to `/login`.
+- Form validation via `zod` schemas (e.g., `LoginShema`) with field-level messages rendered in the UI.
+- Toast notifications (where applicable) for user-visible outcomes (`react-hot-toast`).
+- AbortController used in `ProjectContext` to cancel inflight requests on unmount.

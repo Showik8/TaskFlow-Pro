@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed": "node scripts/seed.mjs",
+    "test": "echo \"No tests configured\" && exit 0"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",

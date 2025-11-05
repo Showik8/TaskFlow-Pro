@@ -1,88 +1,55 @@
-# TaskFlow - Task Management Application
+# TaskFlow Pro – Frontend
 
-TaskFlow is a modern task management application built with React, TypeScript, and Vite.
+React + TypeScript + Vite frontend for TaskFlow Pro. Repository: `https://github.com/Showik8/TaskFlow-Pro`.
 
-## Setup Guide
+## 1) Setup Guide
 
 ### Prerequisites
+- Node.js ≥ 18
+- npm ≥ 9
 
-- Node.js (v16.0.0 or higher)
-- npm (v8.0.0 or higher)
+### Install
+```bash
+git clone https://github.com/Showik8/TaskFlow-Pro.git
+cd TaskFLow_front
+npm install
+```
 
-### Installation
+### Environment variables
+- API base URL is currently configured in `src/utils/apiPaths.ts` via `BASE_URL`.
+- Optional for tooling/seed script: `TASKFLOW_API_BASE_URL` (defaults to `http://localhost:8000`).
 
-1. Clone the repository:
+Example `.env` (optional, used by seed script only):
+```bash
+TASKFLOW_API_BASE_URL=http://localhost:8000
+```
 
-   ```bash
-   git clone https://github.com/Showik8/TaskFlow_front.git
-   cd TaskFlow_front
-   ```
+## 2) Run Scripts
+- Dev: `npm run dev` → http://localhost:5173
+- Build: `npm run build`
+- Preview: `npm run preview`
+- Lint: `npm run lint`
+- Tests: `npm run test` (placeholder)
+- Seed demo data: `npm run seed`
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+## 3) Demo User Credentials
+- Email: `user@taskflow.com`
+- Password: `User123!`
 
-## Run Scripts
+## 4) User Stories (shipped scope)
+- Authentication: register, login, auto-load profile, role-based redirect (admin/user)
+- Project management: list user projects, create project, delete project
+- Task management: create, list, update, delete, update status; search by title
+- Organization: priority, due date, filter in UI
+- Collaboration: add members to project
 
-- **Development server**:
+See `AC.md` for detailed acceptance criteria.
 
-  ```bash
-  npm run dev
-  ```
+## 5) Developer References
+- API endpoints: `src/utils/apiPaths.ts`
+- HTTP client and interceptors: `src/utils/axiosInstance.ts`
+- Auth state: `src/context/UserContext.tsx`
+- Project state: `src/context/ProjectContext.tsx`
+- Data models: `src/shared/Types.ts`
 
-  This starts the development server at `http://localhost:5173`.
-
-- **Build for production**:
-
-  ```bash
-  npm run build
-  ```
-
-  This creates a production-ready build in the `dist` directory.
-
-- **Preview production build**:
-
-1.  ```bash
-    npm run preview
-    ```
-    This serves the production build locally for preview.
-
-## Demo User Credentials
-
-For testing purposes, you can use the following demo accounts:
-
-- **Regular User**:
-  - Email: user@taskflow.com
-  - Password: User123!
-
-## User Stories
-
-1. **User Authentication**
-
-   - As a user, I can register for a new account
-   - As a user, I can log in to my account
-
-2. **Project Managment**
-
-   - As a User, I can create new Project
-   - As a user, i can add members in project
-   - As a User, i can remove project
-
-3. **Task Management**
-
-   - As a user, I can create new tasks
-   - As a user, I can view all my tasks
-   - As a user, I can update task details
-   - As a user, I can delete tasks
-   - As a user, I can mark tasks as complete
-
-4. **Task Organization**
-
-   - As a user, I can categorize tasks
-   - As a user, I can set priorities for tasks
-   - As a user, I can set due dates for tasks
-   - As a user, I can filter and sort tasks
-
-5. **Collaboration**
-   - As a user, I can share Project with other users
+For the API contract, see `openapi.yaml`.

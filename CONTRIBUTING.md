@@ -1,61 +1,53 @@
-# Contributing to TaskFlow
+# Contributing to TaskFlow Pro
 
-Thank you for your interest in contributing to TaskFlow! This document outlines the process for contributing to the project, including branching strategy, pull request workflow, and code style guidelines.
+Thanks for contributing! This guide covers branching, PR workflow, and code style.
 
-## Contribution Workflow
-
-### Getting Started
-
-1. Fork the repository on GitHub
-2. Clone your fork locally:
+## Workflow
+1. Fork the repo: `https://github.com/Showik8/TaskFlow-Pro`
+2. Clone your fork:
    ```bash
-   git clone https://github.com/Showik8/TaskFLow_front.git
+   git clone https://github.com/<your-username>/TaskFlow-Pro.git
    cd TaskFLow_front
    ```
-3. Add the original repository as an upstream remote:
+3. Add upstream:
    ```bash
-   git remote add upstream https://github.com/Showik8/TaskFLow_front.git
+   git remote add upstream https://github.com/Showik8/TaskFlow-Pro.git
+   git fetch upstream
    ```
-4. Install dependencies:
+4. Create a branch:
+   ```bash
+   git checkout -b feat/<short-feature-name>
+   ```
+5. Install deps and run locally:
    ```bash
    npm install
+   npm run dev
    ```
 
-#### Commits Format
+## PR Checklist
+- Lint passes: `npm run lint`
+- Build passes: `npm run build`
+- Update docs if endpoints/flows change
+- Keep PRs small and focused; link related issues
 
-Follow the Conventional Commits format for PR titles:
+## Commit Convention (Conventional Commits)
+- `feat: add task filtering`
+- `fix: prevent crash on empty project list`
+- `docs: update Architecture.md with endpoints`
+- `refactor: simplify UserContext initialization`
 
-- `feat: add task filtering functionality`
-- `fix: resolve date picker validation issue`
-- `docs: update API documentation`
-- `refactor: improve task list performance`
+## Code Style
+- TypeScript, React function components, hooks
+- Descriptive variable names; avoid abbreviations
+- Prefer early returns over deep nesting
+- Add comments only for non-obvious decisions/edge cases
+- Keep UI responsive and accessible
 
-### Code Review Guidelines
+## Branching
+- `master`: stable, deployable
+- feature branches: `feat/*`, `fix/*`, `chore/*`, `docs/*`
 
-- Be respectful and constructive in reviews
-- Focus on code quality, not personal preferences
-- Explain the reasoning behind your suggestions
-- Approve only when all issues have been addressed
-
-## Code Style Guidelines
-
-### General Guidelines
-
-- Follow the DRY (Don't Repeat Yourself) principle
-- Write self-documenting code with clear variable and function names
-- Keep functions small and focused on a single responsibility
-- Add comments for complex logic, but prefer readable code over excessive comments
-- Use TypeScript for type safety
-
-### TypeScript/JavaScript Style
-
-We follow the [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript) with some modifications:
-
-- Use TypeScript for all new code
-- Use functional components with hooks for React components
-- Use arrow functions for callbacks
-- Use async/await instead of Promise chains when possible
-- Use destructuring for props and state
-- Use optional chaining and nullish coalescing when appropriate
-
-Thank you for contributing to TaskFlow!
+## Reviews
+- Be constructive; explain why, not just what
+- Request changes only for correctness, readability, or scope
+- Approve when acceptance criteria are met and checks pass
