@@ -35,7 +35,6 @@ const TaskFilters = () => {
 
   useEffect(() => {
     const handleEnter = (e: KeyboardEvent) => {
-      console.log(taskName);
       if (e.key === "Enter" && taskName && currentProjectId) {
         searchTask();
       }

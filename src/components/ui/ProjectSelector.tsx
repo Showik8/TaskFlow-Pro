@@ -47,7 +47,6 @@ export const ProjectSelector = () => {
       );
       setCreatedNewProject(true);
       toast.success(response.data.message);
-      console.log(newProject);
     } catch (error) {
       console.error("Error creating project:", error);
     }
